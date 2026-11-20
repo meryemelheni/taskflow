@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TaskFlow</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="auth" class="auth hidden">
+    <div class="card">
+      <h1>⚡ TaskFlow</h1><p class="muted">Gérez vos tâches en équipe, simplement.</p>
+      <div class="tabs"><button id="tabLogin" class="on">Connexion</button><button id="tabReg">Inscription</button></div>
+      <input id="aName" placeholder="Nom complet" class="hidden">
+      <input id="aEmail" type="email" placeholder="Email">
+      <input id="aPass" type="password" placeholder="Mot de passe (6+ caractères)">
+      <button id="aGo" class="primary">Se connecter</button><p id="aErr" class="err"></p>
+    </div>
+  </div>
+  <div id="app" class="app hidden">
+    <aside>
+      <h2>⚡ TaskFlow</h2>
+      <nav>
+        <button data-view="board" class="on">▦ Tableau</button>
+        <button data-view="dash">◔ Dashboard</button>
+        <button data-view="activity">≡ Activité</button>
+      </nav>
+      <div class="side-foot"><button id="theme" class="ghost">🌙 Thème</button>
+        <div class="me"><span id="meName"></span><button id="logout" class="ghost">Quitter</button></div></div>
+    </aside>
+    <main>
+      <header>
+        <input id="q" placeholder="Rechercher une tâche…">
+        <select id="fPrio"><option value="">Toutes priorités</option><option value="urgent">Urgente</option><option value="high">Haute</option><option value="medium">Moyenne</option><option value="low">Basse</option></select>
+        <select id="fUser"><option value="">Tous les membres</option></select>
+        <button id="newTask" class="primary">+ Nouvelle tâche</button>
+      </header>
+      <section id="view"></section>
+    </main>
+  </div>
+  <div id="modal" class="modal hidden"><div class="sheet" id="sheet"></div></div>
+  <script src="app.js"></script>
+</body></html>

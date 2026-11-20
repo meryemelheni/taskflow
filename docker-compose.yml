@@ -1,0 +1,36 @@
+# Dev local : cp .env.example .env && docker compose up --build  ->  http://localhost:8080
+services:
+  frontend:
+    build: ./frontend
+    ports: ["8080:8080"]
+    depends_on: [auth-service, task-service, analytics-service]
+  auth-service:
+    build: ./services/auth-service
+    environment:
+      DATABASE_URL: postgres://taskflow:${POSTGRES_PASSWORD}@postgres:5432/auth_db
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on: [postgres]
+  task-service:
+    build: ./services/task-service
+    environment:
+      MONGO_URL: mongodb://taskflow:${MONGO_PASSWORD}@mongo:27017/tasks?authSource=admin
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_KEY: ${INTERNAL_KEY}
+      ANALYTICS_URL: http://analytics-service:8080
+    depends_on: [mongo]
+  analytics-service:
+    build: ./services/analytics-service
+    environment:
+      DATABASE_URL: postgres://taskflow:${POSTGRES_PASSWORD}@postgres:5432/analytics_db
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_KEY: ${INTERNAL_KEY}
+    depends_on: [postgres]
+  postgres:
+    image: postgres:16-alpine
+    environment: { POSTGRES_USER: taskflow, POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}" }
+    volumes: [pgdata:/var/lib/postgresql/data, "./db/init-databases.sql:/docker-entrypoint-initdb.d/init.sql:ro"]
+  mongo:
+    image: mongo:7
+    environment: { MONGO_INITDB_ROOT_USERNAME: taskflow, MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD}" }
+    volumes: [mongodata:/data/db]
+volumes: { pgdata: {}, mongodata: {} }
